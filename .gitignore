@@ -1,0 +1,4 @@
+.envrc
+*.test
+/vendor
+vendor/*

@@ -1,0 +1,13 @@
+---
+listen: 24224
+
+logs:
+  - id: fluent-example
+    type: fluent_in
+    tag: some.*
+    topic: projects/some-project/topics/some-topic
+  - name: tail-example
+    file: /var/log/some.log
+    pos: /var/log/some.pos
+    format: ltsv
+    topic: projects/some-project/topics/some-topic
