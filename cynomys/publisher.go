@@ -2,6 +2,10 @@ package cynomys
 
 import (
 	"context"
+
+	"google.golang.org/grpc"
+
+	pb "google.golang.org/genproto/googleapis/pubsub/v1"
 )
 
 const (
@@ -45,8 +49,25 @@ func (p *Publisher) Compose() {
 }
 
 // Publish is ...
-func (p *Publisher) Publish() {
+func (p *Publisher) Publish() error {
+	req := pb.PublishRequest{
+		Topic: p.Topic,
+		// todo message
+	}
 
+	c, err := grpc.Dial(DialAddress, grpc.WithPerRPCCredentials(p.PerRPCCredential), grpc.WithTransportCredentials(p.TLSCredential))
+	if err != nil {
+		return err
+	}
+	defer c.Close()
+
+	client := pb.NewPublisherClient(c)
+	_, err = client.Publish(p.ctx, &req)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // NewMessage is ...
